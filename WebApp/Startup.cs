@@ -14,6 +14,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Polly;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using Swashbuckle.AspNetCore.SwaggerUI;
 using WebApp.Core.Aplication.Interfaces;
@@ -38,7 +39,9 @@ namespace WebApp
             services.AddHttpClient("MeliClient", client =>
             {
                 client.BaseAddress = new Uri("https://api.mercadolibre.com/");
-            });
+            })
+                .AddTransientHttpErrorPolicy(x=>
+                x.WaitAndRetryAsync(3,_ => TimeSpan.FromSeconds(3)));
             services.AddSingleton<ICustomerRepository, CustomerRepository>();
             services.AddSingleton<IMeliService, MeliService>();
             services.AddApiVersioning(setupAction => 
