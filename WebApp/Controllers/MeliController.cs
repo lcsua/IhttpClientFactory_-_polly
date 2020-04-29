@@ -20,8 +20,13 @@ namespace WebApp.Controllers
             _meliService = meliService;
         }
 
-               
-        [HttpGet("{userId}/user")]      
+
+
+        /// <summary>
+        /// Get a meli user.
+        /// </summary>
+        /// <param name="userId">expample user id 72555338</param>
+        [HttpGet("{userId}/user")]
         public async Task<IActionResult> GetUser(long userId)
         {
             var user = await _meliService.GetMeliUser(userId);
