@@ -18,6 +18,7 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 using Swashbuckle.AspNetCore.SwaggerUI;
 using WebApp.Core.Aplication.Interfaces;
 using WebApp.Infrastructure.Repositories;
+using WebApp.Infrastructure.Services;
 
 namespace WebApp
 {
@@ -34,7 +35,12 @@ namespace WebApp
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddHttpClient("MeliClient", client =>
+            {
+                client.BaseAddress = new Uri("https://api.mercadolibre.com/");
+            });
             services.AddSingleton<ICustomerRepository, CustomerRepository>();
+            services.AddSingleton<IMeliService, MeliService>();
             services.AddApiVersioning(setupAction => 
             {
                 setupAction.AssumeDefaultVersionWhenUnspecified = true;
